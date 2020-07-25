@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      target: dev
+    restart: unless-stopped
+    env_file: .env
+    volumes: 
+      - .:/node/app:delegated
+      - /node/app/node_modules
+    ports:
+      - ${PORT_API}:${PORT_API}
+      - 9229:9229
+    networks: 
+      - backend
+
+  
+  mongodb:
+    image: mongo:4.2-bionic
+    restart: unless-stopped
+    environment: 
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    volumes: 
+      - mongo-db:/data/db
+    ports:
+      - "27017-27019:27017-27019"
+    networks: 
+      - backend
+
+  mongo-express:
+    image: mongo-express:0.54
+    restart: unless-stopped
+    ports: 
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}     
+    networks: 
+      - backend
+
+networks: 
+  backend:
+
+volumes:
+  mongo-db:
