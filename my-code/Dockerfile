@@ -21,9 +21,11 @@ ENTRYPOINT [ "/sbin/tini", "--" ]
 
 FROM base as dev
 ENV NODE_ENV=development
-RUN npm install --only-development
+RUN npm install --only=development \
+    && npm cache clean --force
 WORKDIR /node/app
-CMD ["npm", "run", "start"]
+# CMD ["tail", "-f", "/dev/null"]
+CMD ["npm", "run", "start:dev"]
 
 
 FROM dev as test
@@ -32,14 +34,14 @@ USER node
 CMD ["npm", "run", "test"]
 
 
-FROM dev as source
-COPY --chown=node:node . .
-RUN npm run build
-RUN ls -lah dist
+# FROM dev as source
+# COPY --chown=node:node . .
+# RUN npm run build
 
 
 FROM base as prod
 WORKDIR /node
-COPY --chown=node:node --from=source /node/app/dist/ /node/dist/
+COPY --chown=node:node . /node/app
+# COPY --chown=node:node --from=source /node/app/dist/ /node/app/
 USER node
-CMD ["node", "/node/dist/main.js"]
+CMD ["node", "/node/app/server.js"]
