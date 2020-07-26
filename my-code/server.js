@@ -2,9 +2,9 @@ const express = require('express');
 const { ApolloServer, gql } = require('apollo-server-express');
 const cors = require('cors');
 const dotEnv = require('dotenv');
-const uuid = require('uuid');
 
-const { tasks, users } = require('./constants/index');
+const { tasks, users } = require('./constants');
+const resolvers = require('./resolvers');
 
 dotEnv.config();
 
@@ -49,33 +49,10 @@ const typeDefs = gql`
     user: User!
   }
 `;
-const resolvers = {
-  Query: {
-    greeting: () => 'hello',
-    greetings: () => ['hello', 'world'],
-    tasks: () => tasks,
-    task: (_, { id }) => tasks.find(t => t.id === id),
-    users: () => users,
-    user: (_, { id }) => users.find(u => u.id === id),
-  },
-  Mutation: {
-    createTask: (_, { input }) => {
-      tasks.push( {...input, id: uuid.v4() } );
-      return tasks[tasks.length - 1];
-    }
-  },
-  Task: {
-    // user: (parent) =>  users.find(u => u.id === parent.userId)
-    user: ({ userId }) =>  users.find(u => u.id === userId)
-  },
-  User: {
-    tasks: ({ id }) => tasks.filter(t => t.userId == id)
-  },
-};
 
 const apolloServer = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers  
 });
 apolloServer.applyMiddleware({ app, path: '/graphql' });
 
