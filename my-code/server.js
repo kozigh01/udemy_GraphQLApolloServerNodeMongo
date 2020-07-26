@@ -15,16 +15,6 @@ app.use(cors());
 
 app.use(express.json());
 
-// const typeDefs = gql`
-//   type Query {
-//     greeting: String!
-//     greetings: [String!]!
-//   }
-
-//   type Mutation {
-//   }
-// `;
-
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers  
