@@ -6,10 +6,14 @@ const dotEnv = require('dotenv');
 const { tasks, users } = require('./constants');
 const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
+const { connection } = require('./database/util/util');
 
 dotEnv.config();
 
 const app = express();
+
+// connect to mongodb
+connection();
 
 app.use(cors());
 
