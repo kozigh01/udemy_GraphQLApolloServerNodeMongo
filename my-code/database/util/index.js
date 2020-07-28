@@ -8,11 +8,15 @@ module.exports.connection = async () => {
     await mongoose.connect(
       process.env.MONGO_DB_URL,
       {
-        user: process.env.MONGO_INITDB_ROOT_USERNAME,
-        pass: process.env.MONGO_INITDB_ROOT_PASSWORD,
+        // user: "mdk_user",
+        // pass: "abcd1234",
         useNewUrlParser: true,
         useUnifiedTopology: true,
       },
+      (err, client) => {
+        if (err) throw err;
+
+      }
     );
     console.log('Database connected successfully');
   } catch(error) {

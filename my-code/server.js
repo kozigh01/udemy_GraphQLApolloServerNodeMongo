@@ -6,7 +6,7 @@ const dotEnv = require('dotenv');
 const { tasks, users } = require('./constants');
 const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
-const { connection } = require('./database/util/util');
+const { connection } = require('./database/util');
 
 dotEnv.config();
 
