@@ -12,6 +12,9 @@ The docker compose up command will start three services:
   1. Mongodb
   1. Mongo Express (MongoDB admin tool): can be reached at http://localhost:8081
 
+## Mongo Info
+1. Need to use the '?authSource=admin' query parameter to get auth working ,for example: MONGO_DB_URL=mongodb://mdk:abcd1234@mongodb:27017/mydb?authSource=admin
+
 
 ## Sample Graphql Playground scripts
 1. Tasks:

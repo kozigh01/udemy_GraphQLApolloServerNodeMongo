@@ -12,10 +12,6 @@ module.exports.connection = async () => {
         // pass: "abcd1234",
         useNewUrlParser: true,
         useUnifiedTopology: true,
-      },
-      (err, client) => {
-        if (err) throw err;
-
       }
     );
     console.log('Database connected successfully');
