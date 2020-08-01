@@ -7,6 +7,7 @@ const { tasks, users } = require('./constants');
 const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
 const { connection } = require('./database/util');
+const { verifyUser } = require('./helper/context');
 
 dotEnv.config();
 
@@ -21,7 +22,14 @@ app.use(express.json());
 
 const apolloServer = new ApolloServer({
   typeDefs,
-  resolvers  
+  resolvers,
+  context: async ({ req }) => {  // when declared as a function, will be evaluated on each request
+    await verifyUser(req);
+    return { email: req.email }
+  }
+  // context: {  // when declared as an object, the context is not changed after apollo server is initialized
+  //   email: "test@test.com1" + Math.random()
+  // }
 });
 apolloServer.applyMiddleware({ app, path: '/graphql' });
 

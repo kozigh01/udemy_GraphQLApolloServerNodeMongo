@@ -1,13 +1,18 @@
 const uuid = require('uuid');
 const bcrypt = require('bcryptjs');
+const { combineResolvers } = require('graphql-resolvers');
 
 const { users, tasks } = require('../constants/index');
 const User = require('../database/models/user');
+const { isAuthenticated } = require('./middleware');
 
 module.exports  = {
   Query: {
     users: () => users,
-    user: (_, { id }) => users.find(u => u.id === id),
+    user: combineResolvers(
+        isAuthenticated, 
+        (_, { id }) =>  users.find(u => u.id === id)
+      ),
   },
   Mutation: {
     signUp: async (_, { input }) => {
