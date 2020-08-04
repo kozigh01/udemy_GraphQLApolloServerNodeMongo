@@ -3,25 +3,38 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { combineResolvers } = require('graphql-resolvers');
 
-const { users } = require('../constants/index');
 const User = require('../database/models/user');
 const Task = require('../database/models/task');
 const { isAuthenticated } = require('./middleware');
-// const { Task } = require('./task');
 
 module.exports  = {
   Query: {
-    users: () => users,
+    users: combineResolvers(
+      isAuthenticated,
+        async () => {
+        try {
+          const users = await User.find();
+          if (!users) {
+            throw new Error('Users not found');
+          }
+          return users;
+        } catch (err) {
+          console.log(err);
+          throw err;
+        }
+      }
+    ),
     user: combineResolvers(
       isAuthenticated, 
-      (_, { id }) =>  users.find(u => u.id === id)
+      (_, { id }) =>  User.findOne({ _id: id }),
+      // (_, { id }) =>  users.find(u => u.id === id)
     ),
     me: combineResolvers(
       isAuthenticated,
       async (_1, _2, { email }) => {
         try {
           const user = await User.findOne({ email });
-          if (user) {
+          if (!user) {
             throw new Error('User not found');
           }
           return user;

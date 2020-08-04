@@ -98,9 +98,57 @@ The docker compose up command will start three services:
       }
     }
 
+    query getMe {
+      me {
+        id
+        name
+        email
+        tasks {
+          name
+          completed
+        }
+      }
+    }
 
+    mutation signUp {
+      signUp(input: {
+        name: "Mark"
+        email: "mk@a.c"
+        password: "password"
+      }) {
+        id
+        name
+        email
+        createdAt
+        updatedAt
+        tasks {
+          id
+          name
+        }
+      }
+    }
+
+    mutation login {
+      login(input: {
+        email: "mk@a.c"
+        password: "password"
+      }) {
+        token
+      }
+    }
+
+    #---------------------------
     # Query Variables
+    #---------------------------
     {
       "userId": 4
+    }
+
+    #------------------------------------------------
+    # HTTP Headers
+    # Note: get token with the User "login" mutation
+    #------------------------------------------------
+    {
+      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1rQGEuYyIsImlhdCI6MTU5NjU2NzQzNSwiZXhwIjoxNTk2NjUzODM1fQ.BwfIhctOR6IQe56QbP8ZuEFP5x7MUY8nAtOBZWrH4Aw"
     }
     ```

@@ -28,7 +28,7 @@ const apolloServer = new ApolloServer({
     return { email: req.email }
   }
   // context: {  // when declared as an object, the context is not changed after apollo server is initialized
-  //   email: "test@test.com1" + Math.random()
+  //   email: "test@test.com1" + Math.random()  // since is an object, will always return the email with the first generated random number
   // }
 });
 apolloServer.applyMiddleware({ app, path: '/graphql' });
@@ -37,7 +37,7 @@ apolloServer.applyMiddleware({ app, path: '/graphql' });
 const PORT = process.env.PORT_API || 3000;
 
 app.use('/', (req, res, next) => {
-  res.send({ message: 'hello, dude' });
+  res.send({ message: 'hello, you' });
 })
 
 app.listen(PORT, () => {
