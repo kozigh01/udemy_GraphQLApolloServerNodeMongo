@@ -5,4 +5,4 @@ module.exports.isAuthenticated = (_, _2, { email }) => {
     throw new Error('Access Denied! Please login to continue');
   }
   return skip;
- }
+}
