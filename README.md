@@ -72,6 +72,14 @@ The docker compose up command will start three services:
         }
       }
     }
+    
+    #------------------------------------------------
+    # HTTP Headers
+    # Note: get token with the User "login" mutation
+    #------------------------------------------------
+    {
+      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1rQGEuYyIsImlhdCI6MTU5NjU2NzQzNSwiZXhwIjoxNTk2NjUzODM1fQ.BwfIhctOR6IQe56QbP8ZuEFP5x7MUY8nAtOBZWrH4Aw"
+    }
     ```
 1. Users:
     ```gql
