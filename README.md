@@ -27,15 +27,20 @@ The docker compose up command will start three services:
         user {
           name
           email
+          tasks {
+            id
+            name
+          }
         }
       }  
     }
 
     query getTask {
       # note: ID scalar is always serialized to string
-      task(id: 4) {
+      task(id: "5f29f981ff0c280cb74487ef") {
         id
         name
+        completed
         user {
           name
           tasks {
@@ -60,16 +65,34 @@ The docker compose up command will start three services:
 
     mutation createTask {
       createTask(input: {
-        name: "take training"
-        completed: true
-        userId: 2
+        name: "take training 6.1"
+        completed: false
       }) {
         id
         name
         completed
         user {
           name
+          email
         }
+      }
+    }
+
+    mutation updateTask {
+      updateTask(
+        id: "5f29f981ff0c280cb74487ef", 
+        input: { name: "take training 6.1 rev. 1", completed: true }
+      ) {
+        id
+        name
+        completed
+      }
+    }
+
+    mutation deleteTask {
+      deleteTask(id: "5f2b31e1d8bb611de170d72b") {
+        id
+        name
       }
     }
     

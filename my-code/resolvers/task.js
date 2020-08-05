@@ -10,9 +10,12 @@ module.exports = {
   Query: {
     tasks: combineResolvers(
       isAuthenticated,
-      async (_1, _2, { loggedInUserId }) => { 
+      async (_1, { skip = 0, limit = 10 }, { loggedInUserId }) => { 
         try {
-          const tasks = await Task.find({ user: loggedInUserId });
+          const tasks = await Task.find({ user: loggedInUserId })
+            .sort({ _id: -1 })
+            .skip(skip)
+            .limit(limit);
           return tasks;
         } catch (err) {
           console.log(err);
