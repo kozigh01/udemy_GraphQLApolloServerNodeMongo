@@ -32,7 +32,7 @@ module.exports = {
           throw err;
         }
       } 
-    ) 
+    ),
   },
   Mutation: {
     createTask: combineResolvers(
@@ -50,7 +50,34 @@ module.exports = {
           throw err;
         }
       }
-    ) 
+    ),
+    updateTask: combineResolvers(
+      isAuthenticated,
+      isTaskOwner,
+      async (_, { id, input }) => {
+        try {
+          const task = await Task.findByIdAndUpdate(id, { ...input }, { new: true });
+          return task;
+        } catch (err) {
+          console.log(err);
+          throw err;
+        }
+      }
+    ),
+    deleteTask: combineResolvers(
+      isAuthenticated,
+      isTaskOwner,
+      async (_, { id }, { loggedInUserId }) => {
+        try {
+          const task = await Task.findByIdAndDelete(id);
+          await User.updateOne({ _id: loggedInUserId}, { $pull: { tasks: task.id }});
+          return task;
+        } catch (err) {
+          console.log(err);
+          throw err;
+        }
+      }
+    ),
   },
   Task: {
     user: async ({ user: id }) => {
