@@ -3,7 +3,6 @@ const { ApolloServer, gql } = require('apollo-server-express');
 const cors = require('cors');
 const dotEnv = require('dotenv');
 
-const { tasks, users } = require('./constants');
 const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
 const { connection } = require('./database/util');
@@ -25,7 +24,7 @@ const apolloServer = new ApolloServer({
   resolvers,
   context: async ({ req }) => {  // when declared as a function, will be evaluated on each request
     await verifyUser(req);
-    return { email: req.user.email, loggedInUserId: req.user.id };
+    return { email: req.email, loggedInUserId: req.userid };
   }
   // context: {  // when declared as an object, the context is not changed after apollo server is initialized
   //   email: "test@test.com1" + Math.random()  // since is an object, will always return the email with the first generated random number

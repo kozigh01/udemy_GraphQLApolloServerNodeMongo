@@ -1,6 +1,5 @@
 const { combineResolvers } = require('graphql-resolvers');
 
-const uuid = require('uuid');
 const Task = require('../database/models/task');
 const User = require('../database/models/user');
 const { isAuthenticated, isTaskOwner } = require('./middleware');
