@@ -82,8 +82,8 @@ module.exports  = {
   User: {
     tasks: async ({ id }) => {
       try {
-        const task = await Task.find({ user: id });
-        return task;
+        const tasks = await Task.find({ user: id });
+        return tasks;
       } catch(err) {
         console.log(err);
         throw err;

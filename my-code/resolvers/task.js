@@ -3,19 +3,36 @@ const { combineResolvers } = require('graphql-resolvers');
 const Task = require('../database/models/task');
 const User = require('../database/models/user');
 const { isAuthenticated, isTaskOwner } = require('./middleware');
+const { base64ToString, stringToBase64 } = require('../helper');
 
 
 module.exports = {
   Query: {
     tasks: combineResolvers(
       isAuthenticated,
-      async (_1, { skip = 0, limit = 10 }, { loggedInUserId }) => { 
+      async (_1, { cursor, limit = 10 }, { loggedInUserId }) => { 
+        // graphql pagination: https://graphql.org/learn/pagination/
         try {
-          const tasks = await Task.find({ user: loggedInUserId })
+          const query = { user: loggedInUserId };
+          if (cursor) {
+            query['_id'] = {
+              '$lt': base64ToString(cursor)
+            }
+          }
+          const tasks = await Task.find(query)
             .sort({ _id: -1 })
-            .skip(skip)
-            .limit(limit);
-          return tasks;
+            .limit(limit + 1);  // ask for one more than the limit, so we can test for a next page
+          const hasNextPage = tasks.length > limit;
+          if (hasNextPage) {
+            tasks.pop();
+          }
+          return {
+            taskFeed: tasks,
+            pageInfo: {
+              nextPageCursor: hasNextPage ? stringToBase64(tasks[tasks.length -1].id) : null,
+              hasNextPage
+            }
+          };
         } catch (err) {
           console.log(err);
           throw err;
@@ -82,9 +99,10 @@ module.exports = {
     ),
   },
   Task: {
-    user: async ({ user: id }) => {
+    user: async (parent, _, { loaders }) => {
       try {
-        const user = await User.findById(id);
+        // const user = await User.findById(id);
+        const user = await loaders.user.load(parent.user.toString());
         return user;
       } catch (err) {
         console.log(err);

@@ -5,6 +5,7 @@ dotEnv.config();
 
 module.exports.connection = async () => {
   try {
+    mongoose.set('debug', true);  // this will log all the db calls to the console
     await mongoose.connect(
       process.env.MONGO_DB_URL,
       {
