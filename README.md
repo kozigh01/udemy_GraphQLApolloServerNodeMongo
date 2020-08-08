@@ -19,18 +19,40 @@ The docker compose up command will start three services:
 ## Sample Graphql Playground scripts
 1. Tasks:
     ```gql
+    # Write your query or mutation here
+    #query {
+      # greeting
+      # greetings
+    #}
+
     query getTasks {
-      tasks {
-        id
-        name
-        completed
-        user {
+      tasks(cursor: "NWYyYjMzNmM5Mjc5ODAxZTBlZWY2ODQ4", limit: 4) {
+        taskFeed {
+          id
           name
-          email
-          tasks {
+          completed      
+        }
+        pageInfo {
+          nextPageCursor
+          hasNextPage
+        }
+      }  
+    }
+
+    query getTasks2 {
+      tasks {
+        taskFeed {
             id
             name
-          }
+            completed
+            user {
+              name
+              email
+              tasks {
+                id
+                name
+              }
+            }
         }
       }  
     }
@@ -65,7 +87,7 @@ The docker compose up command will start three services:
 
     mutation createTask {
       createTask(input: {
-        name: "take training 6.1"
+        name: "take training 6.9"
         completed: false
       }) {
         id
@@ -123,6 +145,7 @@ The docker compose up command will start three services:
         name
         email
         tasks {
+          id
           name
           completed 
         }
@@ -137,6 +160,8 @@ The docker compose up command will start three services:
         tasks {
           name
           completed
+          createdAt
+          updatedAt
         }
       }
     }
@@ -167,7 +192,6 @@ The docker compose up command will start three services:
         token
       }
     }
-
     #---------------------------
     # Query Variables
     #---------------------------
